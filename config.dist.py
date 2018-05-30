@@ -12,3 +12,15 @@ TTL = 600    # 10 min
 # APPLICATION SERVER
 APP_PORT = 5000
 APP_HOST = 'localhost'
+
+# User Agent blacklist to prevent password withdrawal by bot (in lowercase)
+UA_BLACKLIST = [
+    'facebook',
+    'googlebot',
+    'slack'
+    'bot',
+    'external-hit',
+    'fetcher',
+    'twitterbot',
+    'telegrambot'
+]
