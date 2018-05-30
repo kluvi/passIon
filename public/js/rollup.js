@@ -10,7 +10,9 @@ function showRollup() {
   $('rollup-inner').className = '';
 }
 
-function toggleRollup() {
+function toggleRollup(event) {
+  event.stopPropagation();
+
   if ($('rollup-inner').className == '') {
     hideRollup();
   } else {
