@@ -14,7 +14,7 @@ import config
 
 logging.basicConfig(level=logging.DEBUG)
 
-app = Flask(__name__,static_folder='public')
+app = Flask(__name__, static_folder='public')
 r = redis.StrictRedis(
     host=config.REDIS_HOST,
     port=config.REDIS_PORT,
@@ -24,7 +24,7 @@ r = redis.StrictRedis(
 
 
 @app.route('/set', methods=['post'])
-def setPass():
+def set_pass():
     assert request.method == 'POST'
     password = request.form['pass']
     iv = request.form['iv']
@@ -39,8 +39,27 @@ def setPass():
     return '/get/{}'.format(uuid)
 
 
+def _is_blacklisted(user_agent):
+    if 'skip-blacklist' in request.args:  # User is probably human
+        return False
+
+    try:
+        user_agent = user_agent.lower()
+        for keyword in config.UA_BLACKLIST:
+            if keyword in user_agent:
+                return True
+
+    except AttributeError:  # Blacklist is not configured
+        return False
+
+    return False
+
+
 @app.route('/get/<uuid>', methods=['get'])
-def getPass(uuid):
+def get_pass(uuid):
+    if _is_blacklisted(request.user_agent.string):
+        return render_template('blacklisted.html'),  403
+
     with r.pipeline() as pipe:
         raw_data = r.get(uuid)
 
@@ -61,6 +80,12 @@ def getPass(uuid):
 def index():
     ttl = int(config.TTL/60)
     return render_template('index.html', ttl=ttl)
+
+
+@app.route('/robots.txt', methods=['get'])
+def robots():
+    return app.send_static_file('robots.txt')
+
 
 if __name__ == '__main__':
     try:
