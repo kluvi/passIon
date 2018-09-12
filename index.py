@@ -58,7 +58,7 @@ def _is_blacklisted(user_agent):
 def get_pass(uuid):
     print(request.remote_addr)
 
-    if request.remote_addr == '176.74.148.57'
+    if request.remote_addr == '176.74.148.57':
         return render_template('blacklisted.html'),  403
 
     if _is_blacklisted(request.user_agent.string):
