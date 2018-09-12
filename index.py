@@ -56,7 +56,12 @@ def _is_blacklisted(user_agent):
 
 @app.route('/get/<uuid>', methods=['get'])
 def get_pass(uuid):
-    if request.remote_addr.string == '176.74.148.57' or _is_blacklisted(request.user_agent.string):
+    print request.remote_addr
+
+    if request.remote_addr == '176.74.148.57'
+        return render_template('blacklisted.html'),  403
+
+    if _is_blacklisted(request.user_agent.string):
         return render_template('blacklisted.html'),  403
 
     with r.pipeline() as pipe:
