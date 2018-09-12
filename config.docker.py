@@ -25,5 +25,7 @@ UA_BLACKLIST = [
     'external-hit',
     'fetcher',
     'twitterbot',
-    'telegrambot'
+    'telegrambot',
+    'ruby',
+    'onebox'
 ]
