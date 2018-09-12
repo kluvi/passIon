@@ -56,7 +56,9 @@ def _is_blacklisted(user_agent):
 
 @app.route('/get/<uuid>', methods=['get'])
 def get_pass(uuid):
-    if request.headers.x_forwarded_for == '176.74.148.57':
+    remote_addr=request.headers['X-Forwarded-For'] if 'X-Forwarded-For' in request.headers else request.remote_addr
+
+    if remote_addr == '176.74.148.57':
         return render_template('blacklisted.html'),  403
 
     if _is_blacklisted(request.user_agent.string):
